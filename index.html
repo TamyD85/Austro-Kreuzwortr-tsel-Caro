@@ -7,7 +7,7 @@
   <style>
     :root{
       --bg:#0b0d10; --panel:#11151b; --ink:#e6e9ef; --muted:#94a3b8; --accent:#7c3aed; --ok:#22c55e; --warn:#fbbf24; --bad:#ef4444;
-      --cell:#1b212b; --cell-alt:#1f2733; --grid:#2b3442; --num:#9aa6b2; --focus:#c084fc; --clue:#cbd5e1; --link:#a78bfa;
+      --cell:#1b212b; --cell-alt:#1f2733; --grid:#2b3442; --num:#9aa6b2; --focus:#c084fc; --link:#a78bfa;
     }
     html,body{height:100%;}
     body{margin:0; background:linear-gradient(180deg,var(--bg),#0e131a); color:var(--ink); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans';}
@@ -91,60 +91,308 @@
   </div>
 
   <script>
-    // ======= Wörter + Hinweise =======
+    // ========= Daten =========
     const RAW_ENTRIES = [
+      // Acts
       { answer: 'Falco', clue: 'Austropop-Ikone; u. a. „Rock Me Amadeus“.' },
-      { answer: 'EAV', clue: 'Satire-Kultband: Erste Allgemeine Verunsicherung.' },
-      { answer: 'Fendrich', clue: 'Rainhard ____; „Macho Macho“, „I am from Austria“.' },
+      { answer: 'EAV', clue: 'Erste Allgemeine Verunsicherung (Satire-Kultband).' },
+      { answer: 'Fendrich', clue: 'Rainhard ____; „Macho Macho“, „I Am From Austria“.' },
       { answer: 'Ambros', clue: 'Wolfgang ____; Austropop-Pionier.' },
       { answer: 'STS', clue: 'Trio hinter „Fürstenfeld“.' },
-      { answer: 'Wanda', clue: 'Band mit „Bologna“ und „Bussi Baby“.' },
-      { answer: 'Bilderbuch', clue: 'Innovative Popband: „Maschin“, „Bungalow“.' },
-      { answer: 'Seiler und Speer', clue: 'Duo, u. a. „Ham kummst“.' },
-      { answer: 'Josh', clue: 'Sänger hinter „Cordula Grün“.' },
+      { answer: 'Wanda', clue: '„Bologna“, „Bussi Baby“.' },
+      { answer: 'Bilderbuch', clue: '„Maschin“, „Bungalow“.' },
+      { answer: 'Seiler und Speer', clue: 'Duo („Ham kummst“).' },
+      { answer: 'Josh', clue: '„Cordula Grün“.' },
       { answer: 'Pizzera und Jaus', clue: 'Kabarett-Pop-Duo seit 2016.' },
       { answer: 'Christina Stürmer', clue: 'Chartstürmerin ab 2003.' },
-      { answer: 'Granada', clue: 'Grazer Band – Dialekt-Indie.' },
+      { answer: 'Granada', clue: 'Grazer Dialekt-Indie.' },
       { answer: 'Voodoo Jürgens', clue: 'Wiener Lied – schwarzer Humor.' },
       { answer: 'Tagträumer', clue: 'Austropop-Newcomer der 2010er.' },
-      { answer: 'Krautschädl', clue: 'Oberösterreichisches Rock-Trio (ab 2003).' },
+      { answer: 'Krautschädl', clue: 'OÖ-Rock-Trio (ab 2003).' },
       { answer: 'Garish', clue: 'Indie/Pop aus dem Burgenland.' },
       { answer: 'Kreisky', clue: 'Wiener Indie-Rock mit politischem Touch.' },
       { answer: 'Der Nino aus Wien', clue: 'Wiener Schmäh seit den 2000ern.' },
-      { answer: 'Die Seer', clue: 'Volksnaher Austropop aus dem Salzkammergut.' },
+      { answer: 'Die Seer', clue: 'Volksnaher Austropop.' },
       { answer: 'Edmund', clue: 'Wiener Duo („Freindschoft“).' },
-      { answer: 'Opus', clue: 'Steirische Band mit Welthit in den 80ern.' },
+      { answer: 'Opus', clue: 'Steirische Band („Live Is Life“).' },
       { answer: 'Parov Stelar', clue: 'Electro-Swing aus Linz.' },
       { answer: 'Buntspecht', clue: 'Folk-Pop aus Wien (2010er).' },
-      { answer: 'Hubert von Goisern', clue: 'Alpenrocker; „Brenna tuats guat“.' },
-      { answer: 'Rock Me Amadeus', clue: 'Falco – internationaler Nr-1-Hit.' },
-      { answer: 'Jeanny', clue: 'Falco – kontroverser 80er-Hit.' },
-      { answer: 'Macho Macho', clue: 'Rainhard Fendrich – Klassiker.' },
+      { answer: 'Hubert von Goisern', clue: 'Alpenrock; „Brenna tuats guat“.' },
+      // Songs 1985–2020
+      { answer: 'Rock Me Amadeus', clue: 'Falco – 1985/86 Nr-1.' },
+      { answer: 'Jeanny', clue: 'Falco – kontroverser Hit.' },
+      { answer: 'Macho Macho', clue: 'Rainhard Fendrich – 1988.' },
       { answer: 'I Am From Austria', clue: 'Fendrich – inoffizielle Hymne.' },
-      { answer: 'Fürstenfeld', clue: 'STS – Sehnsuchtslied.' },
+      { answer: 'Fürstenfeld', clue: 'STS – Sehnsuchtshymne.' },
       { answer: 'Ham kummst', clue: 'Seiler und Speer – Dialekt-Ohrwurm.' },
-      { answer: 'Cordula Grün', clue: 'Josh. – Ohrwurm ab 2018.' },
-      { answer: 'Maschin', clue: 'Bilderbuch – Durchbruch der 2010er.' },
-      { answer: 'Bungalow', clue: 'Bilderbuch – Hit der späten 2010er.' },
-      { answer: 'Bologna', clue: 'Wanda – Pasta, Liebe, Italo-Vibes.' },
-      { answer: 'Bussi Baby', clue: 'Wanda – charmant & frech.' },
-      { answer: 'Ich lebe', clue: 'Christina Stürmer – Debüt-Hit.' },
-      { answer: 'Engel fliegen einsam', clue: 'Christina Stürmer – Ballade.' },
-      { answer: 'Märchenprinz', clue: 'EAV – Satire pur.' },
-      { answer: 'Ba-Ba-Banküberfall', clue: 'EAV – Ohrwurm-Refrain.' },
-      { answer: 'Küss die Hand schöne Frau', clue: 'EAV – höflicher Schmäh.' },
-      { answer: 'Brenna tuats guat', clue: 'Hubert von Goisern – Alpinkraft.' },
-      { answer: 'Freindschoft', clue: 'Edmund – Wiener Duo-Hit.' },
-      { answer: 'Wilds Wossa', clue: 'Die Seer – Dialekt-Klassiker.' },
-      { answer: 'Ottakring', clue: 'Granada – Wien & Dialekt.' },
-      { answer: 'Lebensfreude', clue: 'Übergeordnetes Thema dieses Rätsels.' },
-      { answer: 'Tanzen', clue: 'Bewegung zur Musik – passt immer.' },
-      { answer: 'Sommer', clue: 'Jahreszeit für Open-Air-Konzerte.' },
-      { answer: 'Gemeinsam', clue: 'So machen Konzerte am meisten Spaß.' },
-      { answer: 'Heiterkeit', clue: 'Gute Laune in einem Wort.' }
+      { answer: 'Cordula Grün', clue: 'Josh. – 2018.' },
+      { answer: 'Maschin', clue: 'Bilderbuch – 2013.' },
+      { answer: 'Bungalow', clue: 'Bilderbuch – 2017.' },
+      { answer: 'Bologna', clue: 'Wanda – 2014.' },
+      { answer: 'Bussi Baby', clue: 'Wanda – 2015.' },
+      { answer: 'Ich lebe', clue: 'Christina Stürmer – 2003.' },
+      { answer: 'Engel fliegen einsam', clue: 'Christina Stürmer – 2005.' },
+      { answer: 'Märchenprinz', clue: 'EAV – 1988.' },
+      { answer: 'Ba-Ba-Banküberfall', clue: 'EAV – 1985.' },
+      { answer: 'Küss die Hand schöne Frau', clue: 'EAV – späte 80er.' },
+      { answer: 'Brenna tuats guat', clue: 'Hubert von Goisern – 2011.' },
+      { answer: 'Freindschoft', clue: 'Edmund – 2018.' },
+      { answer: 'Wilds Wossa', clue: 'Die Seer – 2002.' },
+      { answer: 'Ottakring', clue: 'Granada – 2016.' },
+      // Mini-Thema Lebensfreude
+      { answer: 'Lebensfreude', clue: 'Übergeordnetes Thema.' },
+      { answer: 'Tanzen', clue: 'Bewegung zur Musik.' },
+      { answer: 'Sommer', clue: 'Open-Air-Zeit.' },
+      { answer: 'Gemeinsam', clue: 'So macht’s am meisten Spaß.' },
+      { answer: 'Heiterkeit', clue: 'Gute Laune in einem Wort.' },
     ];
-    // --- ab hier folgt der Kreuzwort-Logik-Code (Raster, Eingaben, Prüfen) ---
-    // (den ich dir vorhin schon komplett eingefügt habe – der passt unverändert rein)
+
+    // ========= Helfer =========
+    const norm = s => s
+      .replace(/[Ää]/g,'AE').replace(/[Öö]/g,'OE').replace(/[Üü]/g,'UE').replace(/ß/g,'SS')
+      .replace(/[^A-Z0-9]/gi,'').toUpperCase();
+
+    const entries = RAW_ENTRIES.map((e,i)=>({id:i+1, raw:e.answer, answer:norm(e.answer), clue:e.clue}))
+      .filter(e=>e.answer.length>=3);
+
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
+
+    // ========= Grid & Generator =========
+    const W=33,H=33;
+    const grid = Array.from({length:H},()=>Array.from({length:W},()=>({ch:'#',block:false,cell:null,num:0})));
+
+    function canPlace(word,r,c,dir){
+      if(dir==='across'){
+        if(c<0||c+word.length>W) return false;
+        if(c>0 && grid[r][c-1].ch!=='#') return false;
+        if(c+word.length<W && grid[r][c+word.length].ch!=='#') return false;
+        for(let i=0;i<word.length;i++){
+          const g=grid[r][c+i];
+          if(g.ch!=='#' && g.ch!==word[i]) return false;
+          if(g.ch==='#'){
+            if(r>0 && grid[r-1][c+i].ch!=='#') return false;
+            if(r+1<H && grid[r+1][c+i].ch!=='#') return false;
+          }
+        }
+        return true;
+      }else{
+        if(r<0||r+word.length>H) return false;
+        if(r>0 && grid[r-1][c].ch!=='#') return false;
+        if(r+word.length<H && grid[r+word.length][c].ch!=='#') return false;
+        for(let i=0;i<word.length;i++){
+          const g=grid[r+i][c];
+          if(g.ch!=='#' && g.ch!==word[i]) return false;
+          if(g.ch==='#'){
+            if(c>0 && grid[r+i][c-1].ch!=='#') return false;
+            if(c+1<W && grid[r+i][c+1].ch!=='#') return false;
+          }
+        }
+        return true;
+      }
+    }
+    function placeWord(word,r,c,dir){ for(let i=0;i<word.length;i++){ const rr=r+(dir==='down'?i:0), cc=c+(dir==='across'?i:0); grid[rr][cc].ch=word[i]; } }
+    function tryPlaceWithCrossings(word){
+      const letters=[...word]; const candidates=[];
+      for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+        const g=grid[r][c]; if(g.ch==='#') continue;
+        for(let i=0;i<letters.length;i++){
+          if(g.ch===letters[i]){
+            const ca=c-i; if(ca>=0 && ca+word.length<=W && canPlace(word,r,ca,'across')) candidates.push({r,c:ca,dir:'across',score:2});
+            const rd=r-i; if(rd>=0 && rd+word.length<=H && canPlace(word,rd,c,'down')) candidates.push({r:rd,c,dir:'down',score:2});
+          }
+        }
+      }
+      for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+        if(canPlace(word,r,c,'across')) candidates.push({r,c,dir:'across',score:1});
+        if(canPlace(word,r,c,'down')) candidates.push({r,c,dir:'down',score:1});
+      }
+      if(!candidates.length) return null;
+      const centerBias=p=>-(Math.abs(p.r-H/2)+Math.abs(p.c-W/2));
+      candidates.sort((a,b)=> (b.score-a.score) || (centerBias(b)-centerBias(a)));
+      return candidates[0];
+    }
+
+    function generate(){
+      const words=shuffle(entries.slice()).sort((a,b)=>b.answer.length-a.answer.length);
+      const seed=words.shift();
+      const startC=Math.max(0,Math.floor((W-seed.answer.length)/2));
+      placeWord(seed.answer,Math.floor(H/2),startC,'across'); seed.placed={r:Math.floor(H/2),c:startC,dir:'across'};
+      const unplaced=[];
+      for(const w of words){
+        const pos=tryPlaceWithCrossings(w.answer);
+        if(pos){ placeWord(w.answer,pos.r,pos.c,pos.dir); w.placed=pos; } else unplaced.push(w);
+      }
+      for(let r=0;r<H;r++)for(let c=0;c<W;c++) if(grid[r][c].ch==='#') grid[r][c].block=true;
+
+      // Nummerieren & Clues bauen
+      let n=1; const acrossClues=[], downClues=[];
+      const isLetter=(r,c)=> r>=0&&c>=0&&r<H&&c<W && grid[r][c].ch && grid[r][c].ch!=='#';
+      for(let r=0;r<H;r++){
+        for(let c=0;c<W;c++){
+          if(!isLetter(r,c)) continue;
+          const startAcross=(!isLetter(r,c-1) && isLetter(r,c+1));
+          const startDown  =(!isLetter(r-1,c) && isLetter(r+1,c));
+          if(startAcross||startDown) grid[r][c].num=n;
+          if(startAcross){
+            let cc=c, ans=''; while(isLetter(r,cc)){ ans+=grid[r][cc].ch; cc++; }
+            const item=entries.find(e=>e.answer===ans);
+            acrossClues.push({num:n, answer:ans, raw:item?.raw||ans, clue:item?.clue||'(thematisch)'});
+          }
+          if(startDown){
+            let rr=r, ans=''; while(isLetter(rr,c)){ ans+=grid[rr][c].ch; rr++; }
+            const item=entries.find(e=>e.answer===ans);
+            downClues.push({num:n, answer:ans, raw:item?.raw||ans, clue:item?.clue||'(thematisch)'});
+          }
+          if(startAcross||startDown) n++;
+        }
+      }
+      return {acrossClues,downClues,unplaced};
+    }
+
+    // ========= Render =========
+    const boardEl=document.getElementById('board');
+    function renderBoard(){
+      boardEl.style.gridTemplateColumns=`repeat(${W},28px)`; boardEl.innerHTML='';
+      for(let r=0;r<H;r++){
+        for(let c=0;c<W;c++){
+          const g=grid[r][c];
+          const cell=document.createElement('div'); cell.className='cell'+(g.block?' block':'');
+          if(!g.block){
+            const inp=document.createElement('input'); inp.maxLength=1; inp.dataset.r=r; inp.dataset.c=c; cell.appendChild(inp); g.cell=inp;
+            if(g.num){ const num=document.createElement('div'); num.className='num'; num.textContent=g.num; cell.appendChild(num); }
+          }
+          boardEl.appendChild(cell);
+        }
+      }
+    }
+    const acrossEl=document.getElementById('cluesAcross');
+    const downEl  =document.getElementById('cluesDown');
+    function renderClues(across,down){
+      function mk(list,target){
+        target.innerHTML='';
+        for(const c of list){
+          const el=document.createElement('div'); el.className='clue'; el.tabIndex=0; el.dataset.num=c.num; el.dataset.ans=c.answer;
+          el.innerHTML=`<span class="n">${c.num}</span><strong>${c.raw}</strong> — ${c.clue}`;
+          el.addEventListener('click',()=>focusClue(c));
+          target.appendChild(el);
+        }
+      }
+      mk(across,acrossEl); mk(down,downEl);
+    }
+
+    // ========= Interaction =========
+    let direction='across';
+    function clearHighlights(){ document.querySelectorAll('.cell input').forEach(i=>{i.classList.remove('current');i.classList.remove('highlight')}); }
+    function getWordCells(r,c){
+      const cells=[]; if(direction==='across'){ let cc=c; while(cc>=0 && !grid[r][cc].block) cc--; cc++; while(cc<W && !grid[r][cc].block){ cells.push([r,cc]); cc++; }
+      }else{ let rr=r; while(rr>=0 && !grid[rr][c].block) rr--; rr++; while(rr<H && !grid[rr][c].block){ cells.push([rr,c]); rr++; } }
+      return cells;
+    }
+    function focusCell(r,c){
+      const g=grid[r][c]; if(!g||g.block) return;
+      clearHighlights();
+      for(const [rr,cc] of getWordCells(r,c)) grid[rr][cc].cell?.classList.add('highlight');
+      g.cell?.classList.add('current'); g.cell?.focus();
+    }
+    function move(delta){
+      const a=document.activeElement; if(!(a&&a.tagName==='INPUT')) return;
+      let r=+a.dataset.r, c=+a.dataset.c;
+      if(direction==='across') c+=delta; else r+=delta;
+      while(r>=0&&c>=0&&r<H&&c<W && grid[r][c].block){ if(direction==='across') c+=Math.sign(delta); else r+=Math.sign(delta); }
+      if(r>=0&&c>=0&&r<H&&c<W && !grid[r][c].block) focusCell(r,c);
+    }
+    function focusClue(c){
+      for(let r=0;r<H;r++) for(let t=0;t<W;t++) if(grid[r][t].num===c.num){
+        const acrossStart=(!grid[r][t-1]||grid[r][t-1].block) && (grid[r][t+1]&&!grid[r][t+1].block);
+        direction = acrossStart ? 'across' : 'down'; focusCell(r,t); return;
+      }
+    }
+
+    boardEl.addEventListener('keydown',e=>{
+      const a=document.activeElement; if(!(a&&a.tagName==='INPUT')) return;
+      if(e.key==='ArrowRight'){ direction='across'; move(1); e.preventDefault(); }
+      else if(e.key==='ArrowLeft'){ direction='across'; move(-1); e.preventDefault(); }
+      else if(e.key==='ArrowDown'){ direction='down'; move(1); e.preventDefault(); }
+      else if(e.key==='ArrowUp'){ direction='down'; move(-1); e.preventDefault(); }
+      else if(e.key===' '){ direction=direction==='across'?'down':'across'; e.preventDefault(); focusCell(+a.dataset.r,+a.dataset.c); }
+      else if(e.key==='Backspace'){ a.value=''; move(-1); e.preventDefault(); saveProgress(); }
+    });
+    boardEl.addEventListener('input',e=>{
+      const a=e.target; if(!(a&&a.tagName==='INPUT')) return;
+      a.value=a.value.toUpperCase().replace(/[^A-Z0-9]/g,''); move(1); saveProgress();
+    });
+
+    // ========= Buttons =========
+    const statusEl=document.getElementById('status');
+    document.getElementById('btnCheck').onclick=()=>{
+      let correct=0,total=0;
+      for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+        const g=grid[r][c]; if(g.block||!g.cell) continue; total++;
+        const good=(g.cell.value.toUpperCase()===g.ch);
+        g.cell.style.background = good ? '#102317' : (g.cell.value ? '#2b1620' : 'var(--cell)');
+        g.cell.style.borderColor = good ? '#185a2c' : (g.cell.value ? '#7f1d1d' : '#2a3342');
+        if(good) correct++;
+      }
+      const pct=total?Math.round(100*correct/total):0;
+      statusEl.textContent=`Richtig: ${correct}/${total} (${pct}%)`;
+    };
+    document.getElementById('btnRevealLetter').onclick=()=>{
+      const a=document.activeElement; if(!(a&&a.tagName==='INPUT')) return;
+      const r=+a.dataset.r,c=+a.dataset.c; a.value=grid[r][c].ch; move(1); saveProgress();
+    };
+    document.getElementById('btnRevealWord').onclick=()=>{
+      const a=document.activeElement; if(!(a&&a.tagName==='INPUT')) return;
+      const r=+a.dataset.r,c=+a.dataset.c; for(const [rr,cc] of getWordCells(r,c)){ grid[rr][cc].cell.value=grid[rr][cc].ch; } saveProgress();
+    };
+    document.getElementById('btnClear').onclick=()=>{
+      document.querySelectorAll('.cell input').forEach(i=>{ i.value=''; i.style.background=''; i.style.borderColor=''; });
+      saveProgress();
+    };
+    document.getElementById('btnShare').onclick=()=>{
+      const url = new URL(location.href);
+      url.searchParams.set('state', exportState());
+      navigator.clipboard?.writeText(url.toString());
+      statusEl.textContent='Link mit Fortschritt kopiert!';
+    };
+    document.getElementById('btnExport').onclick=(e)=>{
+      e.preventDefault();
+      const blob=new Blob([exportState()],{type:'text/plain'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kreuzwort-fortschritt.txt'; a.click();
+    };
+
+    // ========= Fortschritt (URL/LocalStorage) =========
+    function exportState(){
+      const letters=[];
+      for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+        const g=grid[r][c]; letters.push(g.block?'#':(g.cell?.value?.toUpperCase()||'_'));
+      }
+      return btoa(letters.join(''));
+    }
+    function importState(b64){
+      try{
+        const s=atob(b64); let i=0;
+        for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+          const g=grid[r][c]; const ch=s[i++]; if(!g.block && ch && ch!=='_' && g.cell) g.cell.value=ch;
+        }
+      }catch(e){ /* ignorieren */ }
+    }
+    function saveProgress(){
+      try{ localStorage.setItem('austropop-crossword', exportState()); }catch(e){}
+    }
+    function loadProgress(){
+      const url = new URL(location.href);
+      const fromUrl = url.searchParams.get('state');
+      const fromLs  = localStorage.getItem('austropop-crossword');
+      if(fromUrl) importState(fromUrl); else if(fromLs) importState(fromLs);
+    }
+
+    // ========= Start =========
+    const {acrossClues,downClues} = generate();
+    renderBoard();
+    renderClues(acrossClues,downClues);
+    // Fokus initial: erste nummerierte Zelle
+    outer: for(let r=0;r<H;r++)for(let c=0;c<W;c++){ if(grid[r][c].num){ focusCell(r,c); break outer; } }
+    loadProgress();
   </script>
 </body>
 </html>
