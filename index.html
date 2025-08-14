@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kreuzworträtsel – Austropop (1985–2020) + Lebensfreude</title>
+  <style>
+    :root{
+      --bg:#0b0d10; --panel:#11151b; --ink:#e6e9ef; --muted:#94a3b8; --accent:#7c3aed; --ok:#22c55e; --warn:#fbbf24; --bad:#ef4444;
+      --cell:#1b212b; --cell-alt:#1f2733; --grid:#2b3442; --num:#9aa6b2; --focus:#c084fc; --clue:#cbd5e1; --link:#a78bfa;
+    }
+    html,body{height:100%;}
+    body{margin:0; background:linear-gradient(180deg,var(--bg),#0e131a); color:var(--ink); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans';}
+    .wrap{max-width:1200px;margin:24px auto;padding:16px;display:grid;gap:16px;grid-template-columns: 1.2fr 1fr;}
+    header{grid-column:1/-1; display:flex; gap:16px; align-items:center; justify-content:space-between}
+    h1{font-size:clamp(22px,3.2vw,30px);margin:.2rem 0;}
+    .subtitle{color:var(--muted); font-size:14px}
+    .card{background:linear-gradient(180deg,var(--panel),#0f141b);border:1px solid #222a34;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+    .grid{padding:12px}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px; border-top:1px solid #1f2530;}
+    button, .btn{background:var(--cell);border:1px solid #2a3342;color:var(--ink);padding:10px 12px;border-radius:12px;cursor:pointer}
+    button:hover{border-color:#39465a}
+    .accent{background:linear-gradient(180deg,#7c3aed,#6d28d9); border-color:#5b21b6}
+    .ok{background:#11321c;border-color:#155e2d;color:#a7f3d0}
+    .warn{background:#3b2e11;border-color:#a16207;color:#fde68a}
+    .bad{background:#3a1416;border-color:#7f1d1d;color:#fecaca}
+    .board{display:grid; gap:2px; background:var(--grid); padding:2px; border-radius:12px; overflow:auto; max-height:min(74vh,900px)}
+    .cell{width:28px;height:28px; background:var(--cell); position:relative; display:grid; place-items:center; font-weight:600; border-radius:6px}
+    .cell:nth-child(2n){background:var(--cell-alt)}
+    .cell input{width:100%;height:100%; border:none; outline:none; background:transparent; text-transform:uppercase; text-align:center; color:var(--ink); font:600 16px/1 monospace;}
+    .block{background:#0b0f15}
+    .num{position:absolute; top:2px; left:4px; font-size:10px; color:var(--num)}
+    .current{box-shadow:0 0 0 2px var(--focus) inset}
+    .highlight{box-shadow:0 0 0 2px rgba(124,58,237,.45) inset}
+    .pane{display:flex; flex-direction:column}
+    .clues{padding:12px; display:grid; grid-template-columns:1fr; gap:8px; max-height:calc(74vh - 48px); overflow:auto}
+    details{border:1px solid #222a34; background:#0f141b; border-radius:12px}
+    summary{cursor:pointer; padding:10px 12px; list-style:none;}
+    summary::-webkit-details-marker{display:none}
+    .clue-list{padding:8px 12px 12px 12px; display:grid; gap:8px}
+    .clue{padding:8px 10px; border:1px solid #243042; border-radius:10px; cursor:pointer}
+    .clue:hover{border-color:#334459}
+    .clue .n{color:var(--num); margin-right:8px}
+    .meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:13px}
+    .footer{grid-column:1/-1; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; padding:8px 4px}
+    @media (max-width: 980px){ .wrap{grid-template-columns:1fr} .board{max-height:60vh} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Kreuzworträtsel · Austropop (1985–2020)</h1>
+        <div class="subtitle">Bekannte Acts & Songs – plus Mini-Thema: <strong>Lebensfreude</strong>.</div>
+      </div>
+      <div class="meta">
+        <span>👥 Für Desktop & Mobil</span>
+        <span>🧩 Autoprüfung & Aufdecken</span>
+      </div>
+    </header>
+
+    <section class="card grid">
+      <div id="board" class="board"></div>
+      <div class="toolbar">
+        <button id="btnCheck" class="ok">Antworten prüfen</button>
+        <button id="btnRevealLetter" class="warn">Buchstabe zeigen</button>
+        <button id="btnRevealWord" class="warn">Wort lösen</button>
+        <button id="btnClear" class="bad">Alles löschen</button>
+        <button id="btnShare" class="accent">Link kopieren</button>
+        <span id="status" style="margin-left:auto;color:var(--muted)">Viel Spaß! 🎵</span>
+      </div>
+    </section>
+
+    <aside class="card pane">
+      <div class="clues">
+        <details open>
+          <summary>Waagrecht</summary>
+          <div id="cluesAcross" class="clue-list"></div>
+        </details>
+        <details open>
+          <summary>Senkrecht</summary>
+          <div id="cluesDown" class="clue-list"></div>
+        </details>
+      </div>
+    </aside>
+
+    <div class="footer">
+      <div>© 2025 – Privatnutzer:in. Rätsel lässt sich frei hosten (GitHub Pages/Netlify etc.).</div>
+      <div><a href="#" id="btnExport" class="btn" style="text-decoration:none;color:var(--link)">🔽 Fortschritt exportieren</a></div>
+    </div>
+  </div>
+
+  <script>
+    // ======= Wörter + Hinweise =======
+    const RAW_ENTRIES = [
+      { answer: 'Falco', clue: 'Austropop-Ikone; u. a. „Rock Me Amadeus“.' },
+      { answer: 'EAV', clue: 'Satire-Kultband: Erste Allgemeine Verunsicherung.' },
+      { answer: 'Fendrich', clue: 'Rainhard ____; „Macho Macho“, „I am from Austria“.' },
+      { answer: 'Ambros', clue: 'Wolfgang ____; Austropop-Pionier.' },
+      { answer: 'STS', clue: 'Trio hinter „Fürstenfeld“.' },
+      { answer: 'Wanda', clue: 'Band mit „Bologna“ und „Bussi Baby“.' },
+      { answer: 'Bilderbuch', clue: 'Innovative Popband: „Maschin“, „Bungalow“.' },
+      { answer: 'Seiler und Speer', clue: 'Duo, u. a. „Ham kummst“.' },
+      { answer: 'Josh', clue: 'Sänger hinter „Cordula Grün“.' },
+      { answer: 'Pizzera und Jaus', clue: 'Kabarett-Pop-Duo seit 2016.' },
+      { answer: 'Christina Stürmer', clue: 'Chartstürmerin ab 2003.' },
+      { answer: 'Granada', clue: 'Grazer Band – Dialekt-Indie.' },
+      { answer: 'Voodoo Jürgens', clue: 'Wiener Lied – schwarzer Humor.' },
+      { answer: 'Tagträumer', clue: 'Austropop-Newcomer der 2010er.' },
+      { answer: 'Krautschädl', clue: 'Oberösterreichisches Rock-Trio (ab 2003).' },
+      { answer: 'Garish', clue: 'Indie/Pop aus dem Burgenland.' },
+      { answer: 'Kreisky', clue: 'Wiener Indie-Rock mit politischem Touch.' },
+      { answer: 'Der Nino aus Wien', clue: 'Wiener Schmäh seit den 2000ern.' },
+      { answer: 'Die Seer', clue: 'Volksnaher Austropop aus dem Salzkammergut.' },
+      { answer: 'Edmund', clue: 'Wiener Duo („Freindschoft“).' },
+      { answer: 'Opus', clue: 'Steirische Band mit Welthit in den 80ern.' },
+      { answer: 'Parov Stelar', clue: 'Electro-Swing aus Linz.' },
+      { answer: 'Buntspecht', clue: 'Folk-Pop aus Wien (2010er).' },
+      { answer: 'Hubert von Goisern', clue: 'Alpenrocker; „Brenna tuats guat“.' },
+      { answer: 'Rock Me Amadeus', clue: 'Falco – internationaler Nr-1-Hit.' },
+      { answer: 'Jeanny', clue: 'Falco – kontroverser 80er-Hit.' },
+      { answer: 'Macho Macho', clue: 'Rainhard Fendrich – Klassiker.' },
+      { answer: 'I Am From Austria', clue: 'Fendrich – inoffizielle Hymne.' },
+      { answer: 'Fürstenfeld', clue: 'STS – Sehnsuchtslied.' },
+      { answer: 'Ham kummst', clue: 'Seiler und Speer – Dialekt-Ohrwurm.' },
+      { answer: 'Cordula Grün', clue: 'Josh. – Ohrwurm ab 2018.' },
+      { answer: 'Maschin', clue: 'Bilderbuch – Durchbruch der 2010er.' },
+      { answer: 'Bungalow', clue: 'Bilderbuch – Hit der späten 2010er.' },
+      { answer: 'Bologna', clue: 'Wanda – Pasta, Liebe, Italo-Vibes.' },
+      { answer: 'Bussi Baby', clue: 'Wanda – charmant & frech.' },
+      { answer: 'Ich lebe', clue: 'Christina Stürmer – Debüt-Hit.' },
+      { answer: 'Engel fliegen einsam', clue: 'Christina Stürmer – Ballade.' },
+      { answer: 'Märchenprinz', clue: 'EAV – Satire pur.' },
+      { answer: 'Ba-Ba-Banküberfall', clue: 'EAV – Ohrwurm-Refrain.' },
+      { answer: 'Küss die Hand schöne Frau', clue: 'EAV – höflicher Schmäh.' },
+      { answer: 'Brenna tuats guat', clue: 'Hubert von Goisern – Alpinkraft.' },
+      { answer: 'Freindschoft', clue: 'Edmund – Wiener Duo-Hit.' },
+      { answer: 'Wilds Wossa', clue: 'Die Seer – Dialekt-Klassiker.' },
+      { answer: 'Ottakring', clue: 'Granada – Wien & Dialekt.' },
+      { answer: 'Lebensfreude', clue: 'Übergeordnetes Thema dieses Rätsels.' },
+      { answer: 'Tanzen', clue: 'Bewegung zur Musik – passt immer.' },
+      { answer: 'Sommer', clue: 'Jahreszeit für Open-Air-Konzerte.' },
+      { answer: 'Gemeinsam', clue: 'So machen Konzerte am meisten Spaß.' },
+      { answer: 'Heiterkeit', clue: 'Gute Laune in einem Wort.' }
+    ];
+    // --- ab hier folgt der Kreuzwort-Logik-Code (Raster, Eingaben, Prüfen) ---
+    // (den ich dir vorhin schon komplett eingefügt habe – der passt unverändert rein)
+  </script>
+</body>
+</html>
