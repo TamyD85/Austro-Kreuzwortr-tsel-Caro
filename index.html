@@ -118,7 +118,7 @@
       { answer: 'Parov Stelar', clue: 'Electro-Swing aus Linz.' },
       { answer: 'Buntspecht', clue: 'Folk-Pop aus Wien (2010er).' },
       { answer: 'Hubert von Goisern', clue: 'Alpenrock; „Brenna tuats guat“.' },
-      // Songs 1985–2020
+      // Songs
       { answer: 'Rock Me Amadeus', clue: 'Falco – 1985/86 Nr-1.' },
       { answer: 'Jeanny', clue: 'Falco – kontroverser Hit.' },
       { answer: 'Macho Macho', clue: 'Rainhard Fendrich – 1988.' },
@@ -139,7 +139,7 @@
       { answer: 'Freindschoft', clue: 'Edmund – 2018.' },
       { answer: 'Wilds Wossa', clue: 'Die Seer – 2002.' },
       { answer: 'Ottakring', clue: 'Granada – 2016.' },
-      // Mini-Thema Lebensfreude
+      // Thema: Lebensfreude
       { answer: 'Lebensfreude', clue: 'Übergeordnetes Thema.' },
       { answer: 'Tanzen', clue: 'Bewegung zur Musik.' },
       { answer: 'Sommer', clue: 'Open-Air-Zeit.' },
@@ -151,10 +151,8 @@
     const norm = s => s
       .replace(/[Ää]/g,'AE').replace(/[Öö]/g,'OE').replace(/[Üü]/g,'UE').replace(/ß/g,'SS')
       .replace(/[^A-Z0-9]/gi,'').toUpperCase();
-
     const entries = RAW_ENTRIES.map((e,i)=>({id:i+1, raw:e.answer, answer:norm(e.answer), clue:e.clue}))
       .filter(e=>e.answer.length>=3);
-
     function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
 
     // ========= Grid & Generator =========
@@ -190,7 +188,12 @@
         return true;
       }
     }
-    function placeWord(word,r,c,dir){ for(let i=0;i<word.length;i++){ const rr=r+(dir==='down'?i:0), cc=c+(dir==='across'?i:0); grid[rr][cc].ch=word[i]; } }
+    function placeWord(word,r,c,dir){
+      for(let i=0;i<word.length;i++){
+        const rr=r+(dir==='down'?i:0), cc=c+(dir==='across'?i:0);
+        grid[rr][cc].ch=word[i];
+      }
+    }
     function tryPlaceWithCrossings(word){
       const letters=[...word]; const candidates=[];
       for(let r=0;r<H;r++)for(let c=0;c<W;c++){
@@ -224,7 +227,6 @@
       }
       for(let r=0;r<H;r++)for(let c=0;c<W;c++) if(grid[r][c].ch==='#') grid[r][c].block=true;
 
-      // Nummerieren & Clues bauen
       let n=1; const acrossClues=[], downClues=[];
       const isLetter=(r,c)=> r>=0&&c>=0&&r<H&&c<W && grid[r][c].ch && grid[r][c].ch!=='#';
       for(let r=0;r<H;r++){
@@ -249,7 +251,7 @@
       return {acrossClues,downClues,unplaced};
     }
 
-    // ========= Render =========
+    // ========= Rendering =========
     const boardEl=document.getElementById('board');
     function renderBoard(){
       boardEl.style.gridTemplateColumns=`repeat(${W},28px)`; boardEl.innerHTML='';
@@ -265,14 +267,22 @@
         }
       }
     }
+
     const acrossEl=document.getElementById('cluesAcross');
     const downEl  =document.getElementById('cluesDown');
+
     function renderClues(across,down){
+      function mask(text, raw){
+        if(!raw) return text;
+        const esc = raw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+        return text.replace(new RegExp(esc,'gi'),'[…]'); // falls der Hinweis die Antwort enthalten sollte
+      }
       function mk(list,target){
         target.innerHTML='';
         for(const c of list){
           const el=document.createElement('div'); el.className='clue'; el.tabIndex=0; el.dataset.num=c.num; el.dataset.ans=c.answer;
-          el.innerHTML=`<span class="n">${c.num}</span><strong>${c.raw}</strong> — ${c.clue}`;
+          const clueText = mask(c.clue, c.raw);
+          el.innerHTML=`<span class="n">${c.num}</span> ${clueText} <em>(${c.answer.length})</em>`;
           el.addEventListener('click',()=>focusClue(c));
           target.appendChild(el);
         }
@@ -346,13 +356,15 @@
     };
     document.getElementById('btnClear').onclick=()=>{
       document.querySelectorAll('.cell input').forEach(i=>{ i.value=''; i.style.background=''; i.style.borderColor=''; });
-      saveProgress();
+      try { localStorage.removeItem('austropop-crossword'); } catch(e){}
+      const clean = location.origin + location.pathname;
+      history.replaceState(null,'',clean);
+      statusEl.textContent='Alles zurückgesetzt.';
     };
     document.getElementById('btnShare').onclick=()=>{
-      const url = new URL(location.href);
-      url.searchParams.set('state', exportState());
-      navigator.clipboard?.writeText(url.toString());
-      statusEl.textContent='Link mit Fortschritt kopiert!';
+      // Basis-Link ohne Fortschritt kopieren (kein Spoiler)
+      navigator.clipboard?.writeText(location.origin + location.pathname);
+      statusEl.textContent='Basis-Link kopiert!';
     };
     document.getElementById('btnExport').onclick=(e)=>{
       e.preventDefault();
@@ -360,7 +372,7 @@
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kreuzwort-fortschritt.txt'; a.click();
     };
 
-    // ========= Fortschritt (URL/LocalStorage) =========
+    // ========= Fortschritt =========
     function exportState(){
       const letters=[];
       for(let r=0;r<H;r++)for(let c=0;c<W;c++){
@@ -374,23 +386,18 @@
         for(let r=0;r<H;r++)for(let c=0;c<W;c++){
           const g=grid[r][c]; const ch=s[i++]; if(!g.block && ch && ch!=='_' && g.cell) g.cell.value=ch;
         }
-      }catch(e){ /* ignorieren */ }
+      }catch(e){ }
     }
-    function saveProgress(){
-      try{ localStorage.setItem('austropop-crossword', exportState()); }catch(e){}
-    }
+    function saveProgress(){ try{ localStorage.setItem('austropop-crossword', exportState()); }catch(e){} }
     function loadProgress(){
-      const url = new URL(location.href);
-      const fromUrl = url.searchParams.get('state');
       const fromLs  = localStorage.getItem('austropop-crossword');
-      if(fromUrl) importState(fromUrl); else if(fromLs) importState(fromLs);
+      if(fromLs) importState(fromLs);
     }
 
     // ========= Start =========
     const {acrossClues,downClues} = generate();
     renderBoard();
     renderClues(acrossClues,downClues);
-    // Fokus initial: erste nummerierte Zelle
     outer: for(let r=0;r<H;r++)for(let c=0;c<W;c++){ if(grid[r][c].num){ focusCell(r,c); break outer; } }
     loadProgress();
   </script>
