@@ -6,40 +6,40 @@
   <title>Kreuzworträtsel – Austropop (1985–2020) + Lebensfreude</title>
   <style>
     :root{
-      --bg:#0b0d10; --panel:#11151b; --ink:#e6e9ef; --muted:#94a3b8; --accent:#7c3aed; --ok:#22c55e; --warn:#fbbf24; --bad:#ef4444;
-      --cell:#1b212b; --cell-alt:#1f2733; --grid:#2b3442; --num:#9aa6b2; --focus:#c084fc; --link:#a78bfa;
+      --bg:#ffffff; --panel:#f9fafb; --ink:#111111; --muted:#4b5563; --accent:#7c3aed; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --cell:#f3f4f6; --cell-alt:#e5e7eb; --grid:#d1d5db; --num:#6b7280; --focus:#7c3aed; --link:#4f46e5;
     }
     html,body{height:100%;}
-    body{margin:0; background:linear-gradient(180deg,var(--bg),#0e131a); color:var(--ink); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans';}
+    body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans';}
     .wrap{max-width:1200px;margin:24px auto;padding:16px;display:grid;gap:16px;grid-template-columns: 1.2fr 1fr;}
     header{grid-column:1/-1; display:flex; gap:16px; align-items:center; justify-content:space-between}
     h1{font-size:clamp(22px,3.2vw,30px);margin:.2rem 0;}
     .subtitle{color:var(--muted); font-size:14px}
-    .card{background:linear-gradient(180deg,var(--panel),#0f141b);border:1px solid #222a34;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+    .card{background:var(--panel);border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.05)}
     .grid{padding:12px}
-    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px; border-top:1px solid #1f2530;}
-    button, .btn{background:var(--cell);border:1px solid #2a3342;color:var(--ink);padding:10px 12px;border-radius:12px;cursor:pointer}
-    button:hover{border-color:#39465a}
-    .accent{background:linear-gradient(180deg,#7c3aed,#6d28d9); border-color:#5b21b6}
-    .ok{background:#11321c;border-color:#155e2d;color:#a7f3d0}
-    .warn{background:#3b2e11;border-color:#a16207;color:#fde68a}
-    .bad{background:#3a1416;border-color:#7f1d1d;color:#fecaca}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px; border-top:1px solid #e5e7eb;}
+    button, .btn{background:var(--cell);border:1px solid #d1d5db;color:var(--ink);padding:10px 12px;border-radius:12px;cursor:pointer}
+    button:hover{border-color:#9ca3af}
+    .accent{background:linear-gradient(180deg,#7c3aed,#6d28d9); border-color:#5b21b6; color:#fff}
+    .ok{background:#dcfce7;border-color:#16a34a;color:#065f46}
+    .warn{background:#fef9c3;border-color:#eab308;color:#713f12}
+    .bad{background:#fee2e2;border-color:#b91c1c;color:#7f1d1d}
     .board{display:grid; gap:2px; background:var(--grid); padding:2px; border-radius:12px; overflow:auto; max-height:min(74vh,900px)}
-    .cell{width:28px;height:28px; background:var(--cell); position:relative; display:grid; place-items:center; font-weight:600; border-radius:6px}
+    .cell{width:28px;height:28px; background:var(--cell); position:relative; display:grid; place-items:center; font-weight:600; border-radius:4px}
     .cell:nth-child(2n){background:var(--cell-alt)}
     .cell input{width:100%;height:100%; border:none; outline:none; background:transparent; text-transform:uppercase; text-align:center; color:var(--ink); font:600 16px/1 monospace;}
-    .block{background:#0b0f15}
+    .block{background:#111111}
     .num{position:absolute; top:2px; left:4px; font-size:10px; color:var(--num)}
     .current{box-shadow:0 0 0 2px var(--focus) inset}
     .highlight{box-shadow:0 0 0 2px rgba(124,58,237,.45) inset}
     .pane{display:flex; flex-direction:column}
     .clues{padding:12px; display:grid; grid-template-columns:1fr; gap:8px; max-height:calc(74vh - 48px); overflow:auto}
-    details{border:1px solid #222a34; background:#0f141b; border-radius:12px}
+    details{border:1px solid #e5e7eb; background:#fff; border-radius:12px}
     summary{cursor:pointer; padding:10px 12px; list-style:none;}
     summary::-webkit-details-marker{display:none}
     .clue-list{padding:8px 12px 12px 12px; display:grid; gap:8px}
-    .clue{padding:8px 10px; border:1px solid #243042; border-radius:10px; cursor:pointer}
-    .clue:hover{border-color:#334459}
+    .clue{padding:8px 10px; border:1px solid #e5e7eb; border-radius:10px; cursor:pointer; background:#fafafa}
+    .clue:hover{border-color:#9ca3af}
     .clue .n{color:var(--num); margin-right:8px}
     .meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:13px}
     .footer{grid-column:1/-1; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; padding:8px 4px}
@@ -118,7 +118,7 @@
       { answer: 'Parov Stelar', clue: 'Electro-Swing aus Linz.' },
       { answer: 'Buntspecht', clue: 'Folk-Pop aus Wien (2010er).' },
       { answer: 'Hubert von Goisern', clue: 'Alpenrock; „Brenna tuats guat“.' },
-      // Songs
+      // Songs 1985–2020
       { answer: 'Rock Me Amadeus', clue: 'Falco – 1985/86 Nr-1.' },
       { answer: 'Jeanny', clue: 'Falco – kontroverser Hit.' },
       { answer: 'Macho Macho', clue: 'Rainhard Fendrich – 1988.' },
@@ -139,7 +139,7 @@
       { answer: 'Freindschoft', clue: 'Edmund – 2018.' },
       { answer: 'Wilds Wossa', clue: 'Die Seer – 2002.' },
       { answer: 'Ottakring', clue: 'Granada – 2016.' },
-      // Thema: Lebensfreude
+      // Mini-Thema Lebensfreude
       { answer: 'Lebensfreude', clue: 'Übergeordnetes Thema.' },
       { answer: 'Tanzen', clue: 'Bewegung zur Musik.' },
       { answer: 'Sommer', clue: 'Open-Air-Zeit.' },
@@ -151,8 +151,10 @@
     const norm = s => s
       .replace(/[Ää]/g,'AE').replace(/[Öö]/g,'OE').replace(/[Üü]/g,'UE').replace(/ß/g,'SS')
       .replace(/[^A-Z0-9]/gi,'').toUpperCase();
+
     const entries = RAW_ENTRIES.map((e,i)=>({id:i+1, raw:e.answer, answer:norm(e.answer), clue:e.clue}))
       .filter(e=>e.answer.length>=3);
+
     function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
 
     // ========= Grid & Generator =========
@@ -188,12 +190,7 @@
         return true;
       }
     }
-    function placeWord(word,r,c,dir){
-      for(let i=0;i<word.length;i++){
-        const rr=r+(dir==='down'?i:0), cc=c+(dir==='across'?i:0);
-        grid[rr][cc].ch=word[i];
-      }
-    }
+    function placeWord(word,r,c,dir){ for(let i=0;i<word.length;i++){ const rr=r+(dir==='down'?i:0), cc=c+(dir==='across'?i:0); grid[rr][cc].ch=word[i]; } }
     function tryPlaceWithCrossings(word){
       const letters=[...word]; const candidates=[];
       for(let r=0;r<H;r++)for(let c=0;c<W;c++){
@@ -227,6 +224,7 @@
       }
       for(let r=0;r<H;r++)for(let c=0;c<W;c++) if(grid[r][c].ch==='#') grid[r][c].block=true;
 
+      // Nummerieren & Clues bauen
       let n=1; const acrossClues=[], downClues=[];
       const isLetter=(r,c)=> r>=0&&c>=0&&r<H&&c<W && grid[r][c].ch && grid[r][c].ch!=='#';
       for(let r=0;r<H;r++){
@@ -238,12 +236,12 @@
           if(startAcross){
             let cc=c, ans=''; while(isLetter(r,cc)){ ans+=grid[r][cc].ch; cc++; }
             const item=entries.find(e=>e.answer===ans);
-            acrossClues.push({num:n, answer:ans, raw:item?.raw||ans, clue:item?.clue||'(thematisch)'});
+            acrossClues.push({num:n, answer:ans, clue:item?.clue||'(thematisch)'});
           }
           if(startDown){
             let rr=r, ans=''; while(isLetter(rr,c)){ ans+=grid[rr][c].ch; rr++; }
             const item=entries.find(e=>e.answer===ans);
-            downClues.push({num:n, answer:ans, raw:item?.raw||ans, clue:item?.clue||'(thematisch)'});
+            downClues.push({num:n, answer:ans, clue:item?.clue||'(thematisch)'});
           }
           if(startAcross||startDown) n++;
         }
@@ -251,7 +249,7 @@
       return {acrossClues,downClues,unplaced};
     }
 
-    // ========= Rendering =========
+    // ========= Render =========
     const boardEl=document.getElementById('board');
     function renderBoard(){
       boardEl.style.gridTemplateColumns=`repeat(${W},28px)`; boardEl.innerHTML='';
@@ -267,22 +265,14 @@
         }
       }
     }
-
     const acrossEl=document.getElementById('cluesAcross');
     const downEl  =document.getElementById('cluesDown');
-
     function renderClues(across,down){
-      function mask(text, raw){
-        if(!raw) return text;
-        const esc = raw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-        return text.replace(new RegExp(esc,'gi'),'[…]'); // falls der Hinweis die Antwort enthalten sollte
-      }
       function mk(list,target){
         target.innerHTML='';
         for(const c of list){
           const el=document.createElement('div'); el.className='clue'; el.tabIndex=0; el.dataset.num=c.num; el.dataset.ans=c.answer;
-          const clueText = mask(c.clue, c.raw);
-          el.innerHTML=`<span class="n">${c.num}</span> ${clueText} <em>(${c.answer.length})</em>`;
+          el.innerHTML=`<span class="n">${c.num}</span>${c.clue}`;
           el.addEventListener('click',()=>focusClue(c));
           target.appendChild(el);
         }
@@ -339,8 +329,8 @@
       for(let r=0;r<H;r++)for(let c=0;c<W;c++){
         const g=grid[r][c]; if(g.block||!g.cell) continue; total++;
         const good=(g.cell.value.toUpperCase()===g.ch);
-        g.cell.style.background = good ? '#102317' : (g.cell.value ? '#2b1620' : 'var(--cell)');
-        g.cell.style.borderColor = good ? '#185a2c' : (g.cell.value ? '#7f1d1d' : '#2a3342');
+        g.cell.style.background = good ? '#dcfce7' : (g.cell.value ? '#fee2e2' : 'var(--cell)');
+        g.cell.style.borderColor = good ? '#16a34a' : (g.cell.value ? '#b91c1c' : '#d1d5db');
         if(good) correct++;
       }
       const pct=total?Math.round(100*correct/total):0;
@@ -355,51 +345,35 @@
       const r=+a.dataset.r,c=+a.dataset.c; for(const [rr,cc] of getWordCells(r,c)){ grid[rr][cc].cell.value=grid[rr][cc].ch; } saveProgress();
     };
     document.getElementById('btnClear').onclick=()=>{
-      document.querySelectorAll('.cell input').forEach(i=>{ i.value=''; i.style.background=''; i.style.borderColor=''; });
-      try { localStorage.removeItem('austropop-crossword'); } catch(e){}
-      const clean = location.origin + location.pathname;
-      history.replaceState(null,'',clean);
-      statusEl.textContent='Alles zurückgesetzt.';
+      document.querySelectorAll('.cell input').forEach(i.value='');
+      saveProgress();
     };
     document.getElementById('btnShare').onclick=()=>{
-      // Basis-Link ohne Fortschritt kopieren (kein Spoiler)
-      navigator.clipboard?.writeText(location.origin + location.pathname);
-      statusEl.textContent='Basis-Link kopiert!';
-    };
-    document.getElementById('btnExport').onclick=(e)=>{
-      e.preventDefault();
-      const blob=new Blob([exportState()],{type:'text/plain'});
-      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kreuzwort-fortschritt.txt'; a.click();
+      const url=location.href.split('#')[0]; navigator.clipboard.writeText(url).then(()=>{ statusEl.textContent='Link kopiert!'; });
     };
 
-    // ========= Fortschritt =========
-    function exportState(){
-      const letters=[];
-      for(let r=0;r<H;r++)for(let c=0;c<W;c++){
-        const g=grid[r][c]; letters.push(g.block?'#':(g.cell?.value?.toUpperCase()||'_'));
-      }
-      return btoa(letters.join(''));
+    // ========= Fortschritt speichern =========
+    function saveProgress(){
+      const state={};
+      document.querySelectorAll('.cell input').forEach(i=>{
+        if(i.value) state[i.dataset.r+','+i.dataset.c]=i.value;
+      });
+      localStorage.setItem('crosswordState',JSON.stringify(state));
     }
-    function importState(b64){
-      try{
-        const s=atob(b64); let i=0;
-        for(let r=0;r<H;r++)for(let c=0;c<W;c++){
-          const g=grid[r][c]; const ch=s[i++]; if(!g.block && ch && ch!=='_' && g.cell) g.cell.value=ch;
-        }
-      }catch(e){ }
-    }
-    function saveProgress(){ try{ localStorage.setItem('austropop-crossword', exportState()); }catch(e){} }
     function loadProgress(){
-      const fromLs  = localStorage.getItem('austropop-crossword');
-      if(fromLs) importState(fromLs);
+      const raw=localStorage.getItem('crosswordState'); if(!raw) return;
+      const state=JSON.parse(raw);
+      document.querySelectorAll('.cell input').forEach(i=>{
+        const k=i.dataset.r+','+i.dataset.c; if(state[k]) i.value=state[k];
+      });
     }
 
-    // ========= Start =========
-    const {acrossClues,downClues} = generate();
+    // ========= Init =========
+    const {acrossClues,downClues,unplaced}=generate();
     renderBoard();
     renderClues(acrossClues,downClues);
-    outer: for(let r=0;r<H;r++)for(let c=0;c<W;c++){ if(grid[r][c].num){ focusCell(r,c); break outer; } }
     loadProgress();
+    if(unplaced.length) console.warn('Nicht platzierte Wörter:',unplaced.map(u=>u.raw));
   </script>
 </body>
 </html>
